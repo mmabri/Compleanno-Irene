@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compleanno Irene @29</title>
+    <style>
+        /* Modern reset and design system styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0c0b0b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #ffffff;
+        }
+
+        /* 1920x1072 container maintaining aspect ratio and fitting in viewport */
+        .wrapper {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            max-width: 100vw;
+            max-height: 100vh;
+            aspect-ratio: 1920 / 1072;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Responsive resizing of the container based on viewport aspect ratio */
+        @media (min-aspect-ratio: 1920/1072) {
+            .wrapper {
+                width: auto;
+                height: 100vh;
+            }
+        }
+
+        @media (max-aspect-ratio: 1920/1072) {
+            .wrapper {
+                width: 100vw;
+                height: auto;
+            }
+        }
+
+        .bg-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            user-select: none;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+
+        /* Second background image, initially invisible */
+        .bg-image-2 {
+            opacity: 0;
+            z-index: 1;
+        }
+
+        /* Clickable area over the center girl's face */
+        .face-area {
+            position: absolute;
+            left: 40%;
+            top: 2%;
+            width: 20%;
+            height: 46%;
+            cursor: url('cursorvento.png') 64 64, pointer;
+            z-index: 5;
+            user-select: none;
+            filter: invert(1);
+            /* debug: border: 2px dashed red; */
+        }
+
+        /* Clickable area for each candle */
+        .candle-area {
+            position: absolute;
+            /* Define a click target width and height to cover the candle and flame */
+            width: 2.604%;
+            /* ~50px of 1920 */
+            height: 24.254%;
+            /* ~260px of 1072 */
+            cursor: url('lighter3.png') 25 0, pointer;
+            user-select: none;
+            /* Outline helper for development if needed: border: 1px dashed rgba(255,255,255,0.3); */
+        }
+
+        /* Flame wrapper to hold position and flip transforms */
+        .flame-wrapper {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            /* ~25px flame in 50px container */
+            height: 33.846%;
+            /* ~88px flame in 260px container */
+            pointer-events: none;
+            /* Let clicks pass through to candle-area */
+        }
+
+        /* Flame GIF styling */
+        .flame-gif {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2;
+        }
+
+        /* Active visible state */
+        .flame-gif.visible {
+            opacity: 1;
+        }
+
+        /* Transformations for specific flames as per Figma (vertical flip / 180deg rotate) */
+        .transformed {
+            transform: translateX(-50%) scaleY(-1) rotate(180deg);
+        }
+
+        /* Hint images: accendici + soffia */
+        .hint-img {
+            position: absolute;
+            /* Right of the rightmost candle, slightly above the candle tops */
+            left: 60%;
+            top: 48%;
+            width: 20%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            z-index: 6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <!-- Main background photo -->
+        <img id="bg1" class="bg-image" src="Image (31).jpeg" alt="Compleanno">
+        <!-- Second background photo (revealed on face click) -->
+        <img id="bg2" class="bg-image bg-image-2" src="Image (32).jpeg" alt="Compleanno 2">
+
+        <!-- Clickable area over the center girl's face -->
+        <div class="face-area" onclick="revealSecondPhoto()"></div>
+
+        <!-- Candle 1 (Leftmost) -->
+        <div class="candle-area" style="left: 38.307%; top: 49.347%;" onclick="toggleFlame(this)">
+            <div class="flame-wrapper">
+                <img class="flame-gif" src="MicrosoftTeams-video1-ezgif.com-effects.gif" alt="Fiamma 1">
+            </div>
+        </div>
+
+        <!-- Candle 2 (Second) -->
+        <div class="candle-area" style="left: 43.411%; top: 49.347%;" onclick="toggleFlame(this)">
+            <!-- Flipped style on parent wrapper to rotate flame -->
+            <div class="flame-wrapper transformed">
+                <img class="flame-gif" src="MicrosoftTeams-video1-ezgif.com-effects.gif" alt="Fiamma 2">
+            </div>
+        </div>
+
+        <!-- Candle 3 (Third - placed corresponding to Figma's 4th flame position horizontally) -->
+        <div class="candle-area" style="left: 48.151%; top: 49.347%;" onclick="toggleFlame(this)">
+            <div class="flame-wrapper">
+                <img class="flame-gif" src="MicrosoftTeams-video1-ezgif.com-effects.gif" alt="Fiamma 3">
+            </div>
+        </div>
+
+        <!-- Candle 4 (Rightmost - corresponding to Figma's 3rd flame position horizontally) -->
+        <div class="candle-area" style="left: 52.838%; top: 49.347%;" onclick="toggleFlame(this)">
+            <!-- Flipped style on parent wrapper to rotate flame -->
+            <div class="flame-wrapper transformed">
+                <img class="flame-gif" src="MicrosoftTeams-video1-ezgif.com-effects.gif" alt="Fiamma 4">
+            </div>
+        </div>
+
+        <!-- Hint: accendici le candeline -->
+        <img id="hint-accendici" class="hint-img" src="accendici.png" alt="Accendici">
+        <!-- Hint: soffia -->
+        <img id="hint-soffia" class="hint-img" src="soffia.png" alt="Soffia">
+    </div>
+
+    <!-- Audio: Irene fa festa -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="Irene fa festa.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Track whether Image (32) is currently showing
+        var isSecondPhoto = false;
+        // Track how many candles are lit
+        var litCount = 0;
+        var totalCandles = 4;
+        var firstCandleLit = false;
+
+        var hintAccendici = document.getElementById('hint-accendici');
+        var hintSoffia = document.getElementById('hint-soffia');
+
+        // Fade in "accendici" shortly after page load
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                hintAccendici.style.opacity = '1';
+            }, 600);
+        });
+
+        function toggleFlame(element) {
+            if (isSecondPhoto) {
+                // On Image 32: any candle click reverts to the first state
+                revertToFirstPhoto();
+                return;
+            }
+
+            // Normal behaviour: toggle flame visibility
+            const flame = element.querySelector('.flame-gif');
+            if (!flame) return;
+
+            const wasVisible = flame.classList.contains('visible');
+            flame.classList.toggle('visible');
+
+            if (!wasVisible) {
+                litCount++;
+            } else {
+                litCount--;
+            }
+
+            // On first candle ever lit: fade out "accendici"
+            if (!firstCandleLit && litCount >= 1) {
+                firstCandleLit = true;
+                hintAccendici.style.opacity = '0';
+            }
+
+            // When all 4 candles are lit: fade in "soffia"
+            if (litCount === totalCandles) {
+                setTimeout(function () {
+                    hintSoffia.style.opacity = '1';
+                }, 200);
+            } else {
+                // If a candle is toggled off while soffia is showing, hide it
+                hintSoffia.style.opacity = '0';
+            }
+        }
+
+        function revealSecondPhoto() {
+            if (isSecondPhoto) return;
+            isSecondPhoto = true;
+
+            // Hide soffia hint
+            hintSoffia.style.opacity = '0';
+
+            // 1. Crossfade background immediately
+            document.getElementById('bg1').style.opacity = '0';
+            document.getElementById('bg2').style.opacity = '1';
+
+            // Disable face area to prevent re-triggering
+            document.querySelector('.face-area').style.pointerEvents = 'none';
+
+            // 2. Fade flames out shortly after bg switch begins
+            setTimeout(function () {
+                document.querySelectorAll('.flame-gif.visible').forEach(function (gif) {
+                    gif.style.transition = 'opacity 0.55s ease';
+                    gif.classList.remove('visible');
+                });
+                litCount = 0;
+            }, 100);
+        }
+
+        function revertToFirstPhoto() {
+            isSecondPhoto = false;
+
+            // 1. Crossfade back to Image (31)
+            document.getElementById('bg2').style.opacity = '0';
+            document.getElementById('bg1').style.opacity = '1';
+
+            // 2. Re-enable face area click
+            document.querySelector('.face-area').style.pointerEvents = 'auto';
+
+            // 3. Restore normal flame transition speed for future toggles
+            document.querySelectorAll('.flame-gif').forEach(function (gif) {
+                gif.style.transition = 'opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+
+            // 4. Show "accendici" again (firstCandleLit resets so hint reappears)
+            firstCandleLit = false;
+            litCount = 0;
+            setTimeout(function () {
+                hintAccendici.style.opacity = '1';
+            }, 400);
+        }
+    </script>
+
+    <script>
+        // Start music on first user interaction (required by browsers)
+        var musicStarted = false;
+        document.addEventListener('click', function startMusic() {
+            if (!musicStarted) {
+                var audio = document.getElementById('bgMusic');
+                audio.volume = 0.4;
+                audio.play().catch(function () { });
+                musicStarted = true;
+            }
+        }, { once: true });
+    </script>
+</body>
+
+</html>
